@@ -1,0 +1,27 @@
+<project>
+  <path id="lib.path">
+    <pathelement location="guava-16.0.1.jar" />
+    <pathelement location="asm-all-5.0.1.jar" />
+  </path>
+  <target name="clean">
+    <delete dir="build"/>
+  </target>
+  <target name="compile">
+    <mkdir dir="build/classes"/>
+    <javac includeantruntime="false" srcdir="." destdir="build/classes">
+      <classpath refid="lib.path" />
+      <compilerarg value="-Xlint:unchecked" />
+      <compilerarg value="-Xlint:deprecation" />
+    </javac>
+  </target>
+  <target name="jar" depends="compile">
+    <mkdir dir="build/jar"/>
+    <jar destfile="build/jar/callgraph.jar" basedir="build/classes">
+      <manifest>
+        <attribute name="Main-Class" value="edu.cornell.networks.Main" />
+        <attribute name="Class-Path" value="../../asm-all-5.0.1.jar ../../guava-16.0.1.jar" />
+      </manifest>
+      <fileset dir="src" includes="**/*" />
+    </jar>
+  </target>
+</project>
