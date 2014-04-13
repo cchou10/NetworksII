@@ -46,4 +46,16 @@ public class AnalysisState {
         }
         return outdeg;
     }
+
+    public static Map<Integer, Integer> distribution(Map<String, Integer> degmap) {
+        Map<Integer, Integer> map = Maps.newHashMap();
+        for (Integer i : degmap.values()) {
+            map.put(i,0);
+        }
+        for (String _ : degmap.keySet()) {
+            int i = degmap.get(_);
+            map.put(i, map.get(i)+1);
+        }
+        return map;
+    }
 }

@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -32,7 +33,6 @@ public class Main {
                 List<MethodNode> methods = cn.methods;
 
                 for (MethodNode method : methods) {
-                    // System.out.printf("%s %s\n",method.name,method.instructions.size());
                     if (method.instructions.size() <= 0) continue;
                     // here, we just want to go through the instructions of method, and construct an edge
                     // me -> it whenever we see it()
@@ -49,6 +49,9 @@ public class Main {
         }
 
         // compute indegree and outdegree maps
+        Map<String, Integer> in = state.getIn(), out = state.getOut();
+        Map<Integer, Integer> dist = AnalysisState.distribution(in);
+        // compute linear fit coefficient. Use n by 2 vandermonde matrix algebra.
     }
 
     static private void traverseFolder(final File folder, List<InputStream> files) {
