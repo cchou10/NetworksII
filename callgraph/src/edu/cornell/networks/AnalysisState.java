@@ -2,8 +2,7 @@ package edu.cornell.networks;
 
 import com.google.common.collect.*;
 
-import java.lang.Math.*;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +72,7 @@ public class AnalysisState {
         }
         double a = (n*kk - sk*sk);
 
-        return new double[]{(kk*sy - sk*ky)/a, (n*ky - sk*sy)/a};
+        return new double[]{Math.exp((kk*sy - sk*ky)/a), (n*ky - sk*sy)/a};
     }
 
     public static String plotInOctave(Map<Integer, Integer> distribution, double c, double g) {
@@ -83,26 +82,29 @@ public class AnalysisState {
          * k = 1:[maxk];
          * y = c*k.^g;
          * loglog([x],[y],'o',k,y)
+         *
+         *
+         A = @(x)[ones(length(x),1),log(x')]
+         solve = @(x,y)(A(x)'*A(x))\(A(x)'*log(y'))
+         ss = @(x,y,n)solve(x(1:n),y(1:n))
          */
-        s.append("c = ");
-        s.append(c);
-        s.append("; g = ");
-        s.append(g);
-        s.append(";\nk = 1:");
+        s.append("c = ").append(c).append("; g = ").append(g).append(";\nk = 1:");
         int max = 0;
-        for (int i : distribution.keySet()) {
+        List<Integer> keys = Lists.newArrayList(distribution.keySet());
+        Collections.sort(keys);
+        for (int i :keys) {
             if (i > max) {
                 max = i;
             }
         }
-        s.append(max);
-        s.append(";\ny = c*k.^g;\nloglog(");
+        s.append(max).append(";\ny = c*k.^g;\nloglog(");
         StringBuilder x = new StringBuilder(), y = new StringBuilder();
-        for (int i : distribution.keySet()) {
+        for (int i : keys) {
             x.append(i).append(",");
             y.append(distribution.get(i)).append(",");
         }
-        s.append("[").append(x).append("0],[").append(y).append("0],'o',k,y)");
+        s.append("[").append(x).append("0],[").append(y).append("0],'o',k,y)\n");
+        s.append("x = [").append(x).append("0]; \ny = [").append(y).append("0]");
         return s.toString();
     }
 }
