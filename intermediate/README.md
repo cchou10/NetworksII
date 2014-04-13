@@ -4,7 +4,7 @@ Should be about 3 pages, double-spaced (citation: lecture)
 
 * Report progress so far
 * Specifies what will be done in remainder
-    * Must identiy problem being addressed
+    * Must identify problem being addressed
     * Make connection to networks
     * Must demonstrate partial progress on depth dimension
       (identification and modeling, analysis, design)
