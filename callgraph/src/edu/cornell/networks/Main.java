@@ -51,6 +51,9 @@ public class Main {
         // compute indegree and outdegree maps
         Map<String, Integer> in = state.getIn(), out = state.getOut();
         Map<Integer, Integer> dist = AnalysisState.distribution(in);
+        double[] coefs = AnalysisState.coefs(dist);
+        System.out.println(dist);
+        System.out.printf("%s, %s\n",coefs[0], coefs[1]);
         // compute linear fit coefficient. Use n by 2 vandermonde matrix algebra.
     }
 
