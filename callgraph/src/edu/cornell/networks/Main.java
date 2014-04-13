@@ -55,6 +55,7 @@ public class Main {
         System.out.println(dist);
         System.out.printf("%s, %s\n",coefs[0], coefs[1]);
         // compute linear fit coefficient. Use n by 2 vandermonde matrix algebra.
+        System.out.println(AnalysisState.plotInOctave(dist, Math.exp(coefs[0]), coefs[1]));
     }
 
     static private void traverseFolder(final File folder, List<InputStream> files) {

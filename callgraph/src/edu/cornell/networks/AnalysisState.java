@@ -84,6 +84,25 @@ public class AnalysisState {
          * y = c*k.^g;
          * loglog([x],[y],'o',k,y)
          */
+        s.append("c = ");
+        s.append(c);
+        s.append("; g = ");
+        s.append(g);
+        s.append(";\nk = 1:");
+        int max = 0;
+        for (int i : distribution.keySet()) {
+            if (i > max) {
+                max = i;
+            }
+        }
+        s.append(max);
+        s.append(";\ny = c*k.^g;\nloglog(");
+        StringBuilder x = new StringBuilder(), y = new StringBuilder();
+        for (int i : distribution.keySet()) {
+            x.append(i).append(",");
+            y.append(distribution.get(i)).append(",");
+        }
+        s.append("[").append(x).append("0],[").append(y).append("0],'o',k,y)");
         return s.toString();
     }
 }
