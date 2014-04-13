@@ -65,15 +65,15 @@ public class AnalysisState {
         // we know that the least squares solution to this is just (A'A)^-1 * A' * log(y)
         // A'A = [1 sum(log(k)); sum(log(k)) norm(log(k),2)^2] (source: math)
         // since we're working under the transform Log, round off is gonna be a bitch...
-        double sk = 0, sy = 0, kk = 0, ky = 0;
+        double sk = 0, sy = 0, kk = 0, ky = 0, n = dist.size();
         for (int k : dist.keySet()) {
             double lk = Math.log(k), ly = Math.log(dist.get(k));
             sk += lk;    sy += ly;
             kk += lk*lk; ky += lk*ly;
         }
-        double a = (kk - sk*sk);
+        double a = (n*kk - sk*sk);
 
-        return new double[]{(kk*sy - sk*ky)/a, (ky - sk*sy)/a};
+        return new double[]{(kk*sy - sk*ky)/a, (n*ky - sk*sy)/a};
     }
 
     public static String plotInOctave(Map<Integer, Integer> distribution, double c, double g) {
