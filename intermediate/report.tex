@@ -90,7 +90,7 @@ sorting=ynt
 \newtheorem*{corollary}{Corollary}
 
 \lstset{ %
-  language=Matlab,                % the language of the code
+  language=Java,                % the language of the code
   basicstyle=\footnotesize,           % the size of the fonts that are used for the code
   numbers=left,                   % where to put the line-numbers
   numberstyle=\tiny\color{gray},  % the style that is used for the line-numbers
@@ -172,48 +172,109 @@ Favian Contreras}
 \begin{singlespace}
 \maketitle
 \begin{abstract}
-We explore what we believe to be a novel approximate measure in the ``efficiency'' of large software engineering projects. Many software systems are so large and complex that it becomes impossible to reason about the runtime properties of such systems using conventional techniques in runtime analysis. As such, an approximation of this property is often used, but even then, it is difficult to create heuristics to judge whether a system is efficient or not. Our approach treats the interaction between the different subroutines of a system as network behaviors and approximates the running time of a system by the most number of calls to a single function. Having experimentally determined that various large software systems behave like scale-free networks, we gain an asymptotic characterization of the growth of the max-degree node within the call-graph which lets us approximate that the running time of such systems with code size $n$ slows down according to $O(\sqrt[\alpha]{n})$ for some $1 < \alpha \le 2$.
+We explore what we believe to be a novel approximate measure in the 
+``efficiency'' of large software engineering projects. Many software systems 
+are so large and complex that it becomes impossible to reason about the 
+runtime properties of such systems using conventional techniques in runtime 
+analysis. As such, an approximation of this property is often used, but even then, it is difficult to create heuristics to judge whether a system is 
+efficient or not. Our approach treats the interaction between the different 
+subroutines of a system as network behaviors and approximates the running time 
+of a system by the most number of calls to a single function. Having 
+experimentally determined that various large software systems behave like scale
+-free networks, we gain an asymptotic characterization of the growth of the max
+-degree node within the call-graph which lets us approximate that the running 
+time of such systems with code size $n$ slows down according to 
+$O(\sqrt[\alpha]{n})$ for some $1 < \alpha \le 2$.
 \end{abstract}
 
-\hspace*{3,6mm}\textit{Keywords:} {\sf \small  scale-free networks, software engineering, static analysis, linear interpolation} % Keywords
+\hspace*{3,6mm}\textit{Keywords:} {\sf \small  scale-free networks, software 
+engineering, static analysis, linear interpolation} % Keywords
 \end{singlespace}
 \vspace{30pt} % Some vertical space between the abstract and first section
 
 %\setlength{\parindent}{0pt}
 
-One of the biggest problems in the software development world is trying to reason about the efficiency of the software systems that are being developed. Traditional runtime analysis techniques tend to focus on algorithms as individual components and is rarely amenable to large scale systems because it's inherently difficult to explore the relationship between large numbers of different components of the system. Therefore, there's a demand to automatically analyze these systems.
+\section*{Introduction}
+One of the biggest problems in the software development world is trying to 
+reason about the efficiency of the software systems that are being developed. 
+Traditional runtime analysis techniques tend to focus on algorithms as 
+individual components and is rarely amenable to large scale systems because 
+it's inherently difficult to explore the relationship between large numbers of 
+different components of the system. Therefore, there's a demand to 
+automatically analyze these systems.
 
-Conventional techniques are rather cumbersome and requires a lot of sophisticated machinery. Oftentimes, these techniques do not scale to large projects with complex interactions between their various subroutines. However, it seems from experience profiling and optimizing code that most of the benefits come from reducing either the code size or the complexity of functions that get called the most. As such, we devised a measure of the complexity of a project based on how many incoming function calls each function might receive. One motivation for this is because this measure essentially maps to the indegree $k_{max}$ parameter (the expected maximum degree of the nodes of a network) of a graph structure that models the calls-into interaction between the various functions, what we will from now on call a call-graph.
+Conventional techniques are rather cumbersome and requires a lot of 
+sophisticated machinery. Oftentimes, these techniques do not scale to large 
+projects with complex interactions between their various subroutines. However, 
+it seems from experience profiling and optimizing code that most of the 
+benefits come from reducing either the code size or the complexity of 
+functions that get called the most. As such, we devised a measure of the 
+complexity of a project based on how many incoming function calls each 
+function might receive. One motivation for this is because this measure 
+essentially maps to the indegree $k_{max}$ parameter (the expected maximum 
+degree of the nodes of a network) of a graph structure that models the calls-
+into interaction between the various functions, what we will from now on call
+ a call-graph.
 
-More formally, using a simplified model, let's define a program $P$ as a collection of functions $\ba{\vec f}$ along with a main function $f^* \in \ba{\vec f}$ acting as the entry-point. Define the function $\f{calls-to}: \g{fun} \to \g{set}(\g{fun})$ that returns the set of functions that \textit{can}\footnote{This is actually a really tricky notion, since the function $f \triangleq \lambda x: \Iff{1 = 2}{g(x)}{h(x)}$ \textbf{cannot} in actuality call $g$ because it's never the case that $1 = 2$, but since this happens so rare in practice, we will say that $f$ can call $\Rec{g,h}$} be called. Furthermore, let's define a relation $\co{calls} \subseteq \g{fun} \times \g{fun}$ such that $$f \co{calls} g \iff g \in \f{calls-to}(f).$$
+More formally, using a simplified model, let's define a program $P$ as a 
+collection of functions $\ba{\vec f}$ along with a main function 
+$f^* \in \ba{\vec f}$ acting as the entry-point. Define the function 
+$\f{calls-to}: \g{fun} \to \g{set}(\g{fun})$ that returns the set of functions 
+that \textit{can}\footnote{This is actually a really tricky notion, since the 
+function $f \triangleq \lambda x: \Iff{1 = 2}{g(x)}{h(x)}$ \textbf{cannot} in 
+actuality call $g$ because it's never the case that $1 = 2$, but since this 
+happens so rare in practice, we will say that $f$ can call $\Rec{g,h}$} be 
+called. Furthermore, let's define a relation 
+$\co{calls} \subseteq \g{fun} \times \g{fun}$ such that 
+$$f \co{calls} g \iff g \in \f{calls-to}(f).$$
 Define the call-graph induced by program $P$ to be 
 $$G_P = \pa{\ba{\vec f}, \co{calls}}$$
-such that the nodes of $G_P$ are the functions in the program and the edges are the pairs $(f,g) \in \co{calls}$\footnote{Recall notationally, $f\co{calls}g$ is equivalent to $(f,g) \in \co{calls}$} so that we connect an edge from $f$ to $g$ if $f$ can call $g$.
+such that the nodes of $G_P$ are the functions in the program and the edges 
+are the pairs $(f,g) \in \co{calls}$\footnote{Recall notationally, 
+$f\co{calls}g$ is equivalent to $(f,g) \in \co{calls}$} so that we connect an 
+edge from $f$ to $g$ if $f$ can call $g$.
 
-Because programming languages obey a very strict semantic model, we hypothesized that this likely means that there's some kind of preferential attachment to certain functions over others. As such, we believed that $G_P$ will be scale-free in the sense that\cite{DUR}
+Because programming languages obey a very strict semantic model, we 
+hypothesized that this likely means that there's some kind of preferential 
+attachment to certain functions over others. As such, we believed that $G_P$ 
+will be scale-free in the sense that\cite{DUR}
 \begin{itemize}
-\item The indegree distribution of the nodes of $G_P$ forms a powerlaw distribution; suppose $p(k)$ is the probability that a vertex in $G_P$ has indegree $k$, then $p(k) \sim C k^{-\gamma}$ and
+\item The indegree distribution of the nodes of $G_P$ forms a powerlaw 
+distribution; suppose $p(k)$ is the probability that a vertex in $G_P$ has 
+indegree $k$, then $p(k) \sim C k^{-\gamma}$ and
 \item furthermore, $2 \le \gamma \le 3$.
 \end{itemize}
-It turns out that scale-free networks have various useful properties that we can exploit, one of which is the characterization of the expected maximum indegree of the graph $k_{max}$, which corresponds to the function in $G_P$ that gets \emph{called into} the most often. 
+It turns out that scale-free networks have various useful properties that we 
+can exploit, one of which is the characterization of the expected maximum 
+indegree of the graph $k_{max}$, which corresponds to the function in $G_P$ 
+that gets \emph{called into} the most often. 
 \section*{Characterizing $k_{max}$ for Scale-Free Networks}
-Recall that the indegree distribution of a scale-free network has probability density function
+Recall that the indegree distribution of a scale-free network has probability 
+density function
 $$
 p(k) = C k^{-\gamma}
 $$
 where 
 $$
-C \sum_{k=0}^\infty k^{-\gamma} = 1 \implies C = \frac{1}{\sum\limits_{k=0}^\infty k^{-\gamma}} = \zeta(\gamma)^{-1}
+C \sum_{k=0}^\infty k^{-\gamma} = 1 \implies 
+C = \frac{1}{\sum\limits_{k=0}^\infty k^{-\gamma}} = \zeta(\gamma)^{-1}
 $$
 if we approximate $\sum \approx \int$, then
 $$
 \zeta(\gamma) \approx \int_1^\infty x^{-\gamma} dx = \pa{\gamma-1}^{-1}
 $$
-Now, suppose we want to find $k_{max}$, then in a discrete sense, we would expect that the probability of $p(k > k_{max})$ must be smaller than the probability to just pick one node out of all of the $n$ nodes, so that, working in the continuous approximation
+Now, suppose we want to find $k_{max}$, then in a discrete sense, we would 
+expect that the probability of $p(k > k_{max})$ must be smaller than the 
+probability to just pick one node out of all of the $n$ nodes, so that, 
+working in the continuous approximation
 $$
-\int_{k_{max}}^\infty (\gamma -1)k^{-\gamma} dk = k_{max}^{1-\gamma} \approx \frac{1}{n}
+\int_{k_{max}}^\infty (\gamma -1)k^{-\gamma} dk = k_{max}^{1-\gamma} \approx 
+\frac{1}{n}
 $$
 and so $k_{max} \approx \sqrt[\gamma - 1]{n}$. \cite{CLASS}
+
+\section*{Analysis Framework}
+
 
 \medskip
 
