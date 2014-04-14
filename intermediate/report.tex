@@ -158,7 +158,7 @@ sorting=ynt
 \author{Clifford Chou, Bryan Cuccioli, Lee Gao, 
 Favian Contreras}
 \date{\today}
-\title{\textbf{Intermediate Project Report}} % Subtitle
+\title{\textbf{Intermediate Progress Report}} % Subtitle
 
 \begin{document}
 \tikzset{every tree node/.style={minimum width=2em,draw,circle},
@@ -274,9 +274,51 @@ $$
 $$
 and so $k_{max} \approx \sqrt[\gamma - 1]{n}$. \cite{CLASS}
 
-\section*{Analysis Framework}
+\section*{Static Analysis Framework}
+In order to test our hypothesis, we first needed to create the tools required 
+to construct $G_P$. We chose to analyze Java programs because of the large 
+number of open source software in the wild that we can use as well as the 
+existing support for doing these types of analysis on Java. 
 
+Now, redistributed Java software is typically composed of a collection of 
+compile \emph{bytecode} that can be executed by the Java Virtual Machine, 
+which is part of the java runtime environment. Because the bytecode language 
+is much more structured and easier to analyze than the textual Java 
+programming language itself, we chose to construct the call-graph of the 
+translated bytecode (encapsulated in the \emph{.class} files). In order to 
+parse and work with compiled code, we used the well-established OCW ASM2 
+package. \cite{ocwasm} 
 
+Since we only care about the invocation relationship between the different 
+functions, the static analysis of the bytecode isn't outright difficult. Using 
+the following algorithm
+\begin{algorithm}
+\caption{Constructing the Call Graph}
+\begin{algorithmic}
+\Function{Analyze}{$P = \ba{\vec f}$}
+\State $G_P \gets \g{new}~ \g{Graph}()$
+\For{$\g{fun}~f \in P$}
+\For{$\g{instruction}~i \in f.\g{instructions}$}
+\If{$i$ is a method-call to $\g{fun}~g$}
+\State Add edge $f \to g$ into $G_P$
+\EndIf
+\EndFor
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+After we've constructed $G_P$, we now need to construct the indegree frequency 
+of $G_P$, which in essence counts the number of edges coming into each 
+function in $G_P$. We decide to represent this abstract notion of a frequency 
+table as a concrete mapping $\f{FreqIn}: \g{fun} \to \mathbb{N}$ within our 
+analysis. We then computed the distribution of the degrees also concretely as 
+a mapping $\f{Dist}: \mathbb{N} \to \mathbb{N}$ which maps each positive 
+degree to the number of nodes of such degree there are within $G_P$.
+\begin{figure}[B]
+\centering
+\includegraphics[scale=0.7]{dist}
+\end{figure}
+\section*{Assessing Goodness of Fit and Linear Interpolation}
 \medskip
 
 \printbibliography[title={References}]

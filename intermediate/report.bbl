@@ -1,0 +1,63 @@
+% $ biblatex auxiliary file $
+% $ biblatex version 2.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\entry{DUR}{book}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Durrett}{D.}%
+     {Rick}{R.}%
+     {}{}%
+     {}{}}%
+  }
+  \list{publisher}{1}{%
+    {Cambridge university press}%
+  }
+  \strng{namehash}{DR1}
+  \strng{fullhash}{DR1}
+  \field{labelalpha}{Dur07}
+  \field{sortinit}{2}
+  \field{title}{Random graph dynamics}
+  \field{volume}{20}
+  \field{year}{2007}
+\endentry
+
+\entry{CLASS}{incollection}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Barabasi}{B.}%
+     {Albert-Laszlo}{A.-L.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{BAL1}
+  \strng{fullhash}{BAL1}
+  \field{labelalpha}{Bar12}
+  \field{sortinit}{2}
+  \field{booktitle}{Network Science}
+  \field{title}{Scale-Free Property}
+  \verb{url}
+  \verb http://barabasilab.neu.edu/courses/phys5116/content/Class4_NetSci_2012/
+  \verb 04_CLASS_2012_Scale-Free_Property.pdf
+  \endverb
+  \field{year}{2012}
+\endentry
+
+\lossort
+\endlossort
+
+\endinput
