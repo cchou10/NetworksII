@@ -191,7 +191,7 @@ $O(\sqrt[\alpha]{n})$ for some $1 < \alpha \le 2$.
 \hspace*{3,6mm}\textit{Keywords:} {\sf \small  scale-free networks, software 
 engineering, static analysis, linear interpolation} % Keywords
 \end{singlespace}
-\vspace{30pt} % Some vertical space between the abstract and first section
+\vspace{10pt} % Some vertical space between the abstract and first section
 
 %\setlength{\parindent}{0pt}
 
@@ -317,7 +317,7 @@ degree to the number of nodes of such degree there are within $G_P$.
 \begin{figure}
 \centering
 \caption{}
-\includegraphics[scale=0.7]{dist}
+\includegraphics[scale=0.6]{dist}
 \end{figure}
 \section*{Assessing Goodness of Fit and Linear Interpolation}
 We analyzed the source code two large open source java projects (Guava and 
@@ -366,7 +366,40 @@ therefore we develop a rather interesting phenomenon of a fat tail distribution.
 When left untreated, this will tend to skew our distribution.
 
 \section*{Moving Forward}
-
+There are many things left to do that we will still need to implement. 
+\begin{enumerate}
+\item 
+First and 
+foremost, in order to be objective, we will need to evaluate many more projects to
+determine whether this scale-freeness is a property of just the small sample that 
+we've currently tested or it is more likely that this is a global phenomenon.
+\item 
+Secondly, it has come to our attention that many of these scale-free distributions
+are actually exponentially damped. Therefore, it is worthwhile to explore whether
+our model may improve with various "extensional" distributions.
+\item 
+There's also the issue that automatic analysis to infer the exponent on the coefficient
+is difficult right now because the fat tail is fudging the result. After a little bit of 
+thought and some consultation with existing research, we realized that if $p(k = x)$ 
+is power law, then so too is the cumulative density $p(k \ge x)$ as long as 
+$\gamma > 1$. In fact, it can be shown that \cite{CLASS}
+$$
+p(k \ge x) = \zeta(\gamma) x^{1-\gamma}
+$$
+this is great because we can instead compute the cumulative degree distribution 
+density, which is not effected by the fat tail (which have low frequencies that are 
+almost negligible after accumulating all of the degree counts together). Since this 
+too is a power law, we can use the same exact technique as before to get the 
+parameter $\alpha = \gamma-1$ and set $\gamma = \alpha + 1$.
+\item 
+Discover a concrete application of this analysis. Right now, this analysis affords us 
+with the knowledge that the function that ``gets called most often'' should get 
+called more often at the rate of $O(\sqrt[\gamma-1]{n})$ for $n$ some measure of
+the size of the program. We can likely use this as a crude estimator on whether 
+implementing certain optimizations on the program is worth the effort, and to 
+predict at what point in the future we will need to do significant rewrite of the
+program in order to improve efficiency.
+\end{enumerate}
 \medskip
 
 \printbibliography[title={References}]
