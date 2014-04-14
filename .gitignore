@@ -7,6 +7,8 @@
 *.synctex.gz
 *.pdf
 *.dvi
+*.xml
+*.out
 
 # Java compiled files
 callgraph/build
