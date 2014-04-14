@@ -314,11 +314,59 @@ table as a concrete mapping $\f{FreqIn}: \g{fun} \to \mathbb{N}$ within our
 analysis. We then computed the distribution of the degrees also concretely as 
 a mapping $\f{Dist}: \mathbb{N} \to \mathbb{N}$ which maps each positive 
 degree to the number of nodes of such degree there are within $G_P$.
-\begin{figure}[B]
+\begin{figure}
 \centering
+\caption{}
 \includegraphics[scale=0.7]{dist}
 \end{figure}
 \section*{Assessing Goodness of Fit and Linear Interpolation}
+We analyzed the source code two large open source java projects (Guava and 
+OCW's ASM project) and found that the degree distribution looks to be
+about power law based on their \g{loglog} plots. Recall that if a distribution has
+density $p(k) \sim Ck^{-\gamma}$, then $\log(p(k)) = \log(C) - \gamma \log(k)$
+so its distribution density should look roughly linear.
+
+In order to determine the powerlaw coefficient $\gamma$, we resort to linear
+algebra. We are give a list of degrees $k$ and a list of frequencies of these 
+degrees $y$, and we want to find the parameters $C,\gamma$ so that 
+$\hat y(k) = Ck^{-\gamma}$ best fits the observed data. Since non-linear 
+interpolation is a hard problem, we can transform the data logarithmically into
+a linear interpolation problem
+$$
+\arg\min_{C,\gamma} \|(\log(C) - \gamma \log(k)) - \log(y)\|_2^2
+$$
+a monotonicity argument with respect to $\log$ should guarantee that the
+minimum of this system is also optimal when we transform this instance back
+via $\exp$.
+
+Now, let $\bar k = \log k, \bar y = \log y, \bar C = \log C$, let $n = \g{length}(k)$
+ and let $A$ be the $n \times 2$ matrix 
+ $$\small A = \mat{1 & \bar k_1 \\ 1 & \bar k_2 \\ \vdots \\ 1 & \bar k_n}$$ 
+then we are attempting to find the solution $x = \pa{\bar C, -\gamma}^T$ such 
+that $\min_x \|Ax - \bar y\|$ is minimized. We can solve this via the normal equation 
+\cite{linalg} so that  $x = (A^TA)^{-1}A^T\bar y$. Since this is just a 2 by 2 system
+$$
+x = \mat{n & \sum_i \bar k_i \\ \sum_i \bar k_i & \bar k^T\bar k}^{-1} 
+\mat{\sum_i \bar y_i \\ \bar k^T\bar y} 
+= \frac{1}{n\cdot \bar k^T\bar k - \pa{\sum \bar k}^2} 
+\mat{\bar k^T \bar k \cdot \sum \bar y - \sum_i \bar k \cdot \bar k^T\bar y \\ 
+n \bar k^T \bar y - \pa{\sum_i \bar k}\pa{\sum_i \bar y}}
+$$
+so we know that $\gamma = 
+\frac{\pa{\sum_i \bar k}\pa{\sum_i \bar y}- 
+n \bar k^T \bar y}{n\cdot \bar k^T\bar k - \pa{\sum \bar k}^2}$ which is easily
+computable. 
+
+In the case of the Guava project, the distribution has coefficient $\gamma = 2.27$
+which suggests that it is within the real of a scale-free network \cite{CLASS}, 
+as can be seen in 
+figure 1. However, we see that since we have a discrete distribution, it is impossible
+for the patter to carry one once $p(k) < 1$ since we cannot have fractional counts,
+therefore we develop a rather interesting phenomenon of a fat tail distribution.
+When left untreated, this will tend to skew our distribution.
+
+\section*{Moving Forward}
+
 \medskip
 
 \printbibliography[title={References}]
