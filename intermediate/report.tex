@@ -146,7 +146,7 @@ sorting=ynt
  
 \lhead{\fancyplain{}{\footnotesize\leftmark}}
 \chead{}
-\rhead{\fancyplain{}{\textsc{Lee Gao}}}
+\rhead{}
 \lfoot{}
 \cfoot{\thepage\ of \pageref{LastPage}}
 \rfoot{}
@@ -174,8 +174,8 @@ Favian Contreras}
 \begin{abstract}
 We explore what we believe to be a novel approximate measure in the 
 ``efficiency'' of large software engineering projects. Many software systems 
-are so large and complex that it becomes impossible to reason about the 
-runtime properties of such systems using conventional techniques in runtime 
+are so large and complex that it is impossible to reason about their
+runtime properties using conventional techniques in runtime 
 analysis. As such, an approximation of this property is often used, but even 
 then, it is difficult to create heuristics to judge whether a system is 
 efficient or not. Our approach treats the interaction between the different 
@@ -199,32 +199,32 @@ engineering, static analysis, linear interpolation} % Keywords
 One of the biggest problems in the software development world is trying to 
 reason about the efficiency of the software systems that are being developed. 
 Traditional runtime analysis techniques tend to focus on algorithms as 
-individual components and is rarely amenable to large scale systems because 
-it's inherently difficult to explore the relationship between large numbers of 
-different components of the system. Therefore, there's a demand to 
+individual components and are rarely amenable to large scale systems because 
+of the inherent difficulty in exploring the relationship between large numbers of 
+different components of the system. Therefore, there is demand to 
 automatically analyze these systems.
 
-Conventional techniques are rather cumbersome and requires a lot of 
+Conventional techniques are rather cumbersome and require a lot of 
 sophisticated machinery. Oftentimes, these techniques do not scale to large 
 projects with complex interactions between their various subroutines. However, 
-it seems from experience profiling and optimizing code that most of the 
+from experience, in profiling and optimizing code most of the 
 benefits come from reducing either the code size or the complexity of 
 functions that get called the most. As such, we devised a measure of the 
 complexity of a project based on how many incoming function calls each 
-function might receive. One motivation for this is because this measure 
+function might receive. One motivation for this is that this measure 
 essentially maps to the indegree $k_{max}$ parameter (the expected maximum 
 degree of the nodes of a network) of a graph structure that models the calls-
-into interaction between the various functions, what we will from now on call
- a call-graph.
+into interaction between the various functions, which we will henceforth
+refer to as a call-graph.
 
-More formally, using a simplified model, let's define a program $P$ as a 
+More formally, using a simplified model,  define a program $P$ as a 
 collection of functions $\ba{\vec f}$ along with a main function 
 $f^* \in \ba{\vec f}$ acting as the entry-point. Define the function 
 $\f{calls-to}: \g{fun} \to \g{set}(\g{fun})$ that returns the set of functions 
-that \textit{can}\footnote{This is actually a really tricky notion, since the 
+that \textit{can}\footnote{This is a subtle notion, since the 
 function $f \triangleq \lambda x: \Iff{1 = 2}{g(x)}{h(x)}$ \textbf{cannot} in 
 actuality call $g$ because it's never the case that $1 = 2$, but since this 
-happens so rare in practice, we will say that $f$ can call $\Rec{g,h}$} be 
+happens so rarely in practice, we will say that $f$ can call $\Rec{g,h}$} be 
 called. Furthermore, let's define a relation 
 $\co{calls} \subseteq \g{fun} \times \g{fun}$ such that 
 $$f \co{calls} g \iff g \in \f{calls-to}(f).$$
@@ -240,7 +240,7 @@ hypothesized that this likely means that there's some kind of preferential
 attachment to certain functions over others. As such, we believed that $G_P$ 
 will be scale-free in the sense that\cite{DUR}
 \begin{itemize}
-\item The indegree distribution of the nodes of $G_P$ forms a powerlaw 
+\item the indegree distribution of the nodes of $G_P$ forms a power law 
 distribution; suppose $p(k)$ is the probability that a vertex in $G_P$ has 
 indegree $k$, then $p(k) \sim C k^{-\gamma}$ and
 \item furthermore, $2 \le \gamma \le 3$.
@@ -282,7 +282,7 @@ existing support for doing these types of analysis on Java.
 
 Now, redistributed Java software is typically composed of a collection of 
 compile \emph{bytecode} that can be executed by the Java Virtual Machine, 
-which is part of the java runtime environment. Because the bytecode language 
+which is part of the Java runtime environment. Because the bytecode language 
 is much more structured and easier to analyze than the textual Java 
 programming language itself, we chose to construct the call-graph of the 
 translated bytecode (encapsulated in the \emph{.class} files). In order to 
@@ -290,8 +290,7 @@ parse and work with compiled code, we used the well-established OCW ASM2
 package. \cite{ocwasm} 
 
 Since we only care about the invocation relationship between the different 
-functions, the static analysis of the bytecode isn't outright difficult. Using 
-the following algorithm
+functions, the static analysis of the bytecode is not difficult.
 \begin{algorithm}
 \caption{Constructing the Call Graph}
 \begin{algorithmic}
@@ -320,22 +319,22 @@ degree to the number of nodes of such degree there are within $G_P$.
 \includegraphics[scale=0.7]{dist}
 \end{figure}
 \section*{Assessing Goodness of Fit and Linear Interpolation}
-We analyzed the source code two large open source java projects (Guava and 
-OCW's ASM project) and found that the degree distribution looks to be
-about power law based on their \g{loglog} plots. Recall that if a distribution has
+We analyzed the source code two large open source Java projects (Guava and 
+OCW's ASM project) and found that the degree distribution follows a
+power law based on their \g{loglog} plots. Recall that if a distribution has
 density $p(k) \sim Ck^{-\gamma}$, then $\log(p(k)) = \log(C) - \gamma \log(k)$
 so its distribution density should look roughly linear.
 
-In order to determine the powerlaw coefficient $\gamma$, we resort to linear
+In order to determine the power law coefficient $\gamma$, we resort to linear
 algebra. We are give a list of degrees $k$ and a list of frequencies of these 
 degrees $y$, and we want to find the parameters $C,\gamma$ so that 
 $\hat y(k) = Ck^{-\gamma}$ best fits the observed data. Since non-linear 
 interpolation is a hard problem, we can transform the data logarithmically into
 a linear interpolation problem
 $$
-\arg\min_{C,\gamma} \|(\log(C) - \gamma \log(k)) - \log(y)\|_2^2
+\arg\min_{C,\gamma} \|(\log(C) - \gamma \log(k)) - \log(y)\|_2^2.
 $$
-a monotonicity argument with respect to $\log$ should guarantee that the
+A monotonicity argument with respect to $\log$ should guarantee that the
 minimum of this system is also optimal when we transform this instance back
 via $\exp$.
 
@@ -358,10 +357,10 @@ n \bar k^T \bar y}{n\cdot \bar k^T\bar k - \pa{\sum \bar k}^2}$ which is easily
 computable. 
 
 In the case of the Guava project, the distribution has coefficient $\gamma = 2.27$
-which suggests that it is within the real of a scale-free network \cite{CLASS}, 
+which suggests that it is within the realm of a scale-free network \cite{CLASS}, 
 as can be seen in 
 figure 1. However, we see that since we have a discrete distribution, it is impossible
-for the patter to carry one once $p(k) < 1$ since we cannot have fractional counts,
+for the pattern to carry one once $p(k) < 1$ since we cannot have fractional counts,
 therefore we develop a rather interesting phenomenon of a fat tail distribution.
 When left untreated, this will tend to skew our distribution.
 
