@@ -57,6 +57,47 @@
   \field{year}{2012}
 \endentry
 
+\entry{mcomp}{book}{}
+  \name{author}{2}{}{%
+    {{}%
+     {Loan}{L.}%
+     {Charles F.~Van}{C.~F.~V.}%
+     {}{}%
+     {}{}}%
+    {{}%
+     {Golub}{G.}%
+     {Gene~H.}{G.~H.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{LCFVGGH1}
+  \strng{fullhash}{LCFVGGH1}
+  \field{labelalpha}{LG13}
+  \field{sortinit}{2}
+  \field{edition}{4}
+  \field{title}{Matrix Computations}
+  \field{year}{2013}
+\endentry
+
+\entry{ocwasm}{online}{}
+  \name{author}{1}{}{%
+    {{}%
+     {Consortium}{C.}%
+     {OW2}{O.}%
+     {}{}%
+     {}{}}%
+  }
+  \strng{namehash}{CO1}
+  \strng{fullhash}{CO1}
+  \field{labelalpha}{Con14}
+  \field{sortinit}{2}
+  \field{title}{ASM - Home Page}
+  \verb{url}
+  \verb http://asm.ow2.org/
+  \endverb
+  \field{year}{2014}
+\endentry
+
 \lossort
 \endlossort
 

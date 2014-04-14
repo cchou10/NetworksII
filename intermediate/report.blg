@@ -15,49 +15,47 @@ Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Database file #1: report-blx.bib
 Database file #2: references.bib
-Warning--I didn't find a database entry for "ocwasm"
 Biblatex version: 2.6
 Reallocated singl_function (elt_size=4) to 100 items from 50.
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
-You've used 3 entries,
+You've used 5 entries,
             6019 wiz_defined-function locations,
-            1136 strings with 8291 characters,
-and the built_in function-call counts, 7821 in all, are:
-= -- 349
-> -- 261
-< -- 99
-+ -- 101
-- -- 81
-* -- 402
-:= -- 638
+            1144 strings with 8408 characters,
+and the built_in function-call counts, 13705 in all, are:
+= -- 532
+> -- 467
+< -- 180
++ -- 147
+- -- 154
+* -- 836
+:= -- 979
 add.period$ -- 0
-call.type$ -- 3
-change.case$ -- 53
-chr.to.int$ -- 44
-cite$ -- 4
-duplicate$ -- 761
-empty$ -- 793
-format.name$ -- 105
-if$ -- 1819
+call.type$ -- 5
+change.case$ -- 77
+chr.to.int$ -- 52
+cite$ -- 8
+duplicate$ -- 1449
+empty$ -- 1439
+format.name$ -- 230
+if$ -- 3168
 int.to.chr$ -- 0
-int.to.str$ -- 5
+int.to.str$ -- 9
 missing$ -- 0
-newline$ -- 63
-num.names$ -- 119
-pop$ -- 680
+newline$ -- 104
+num.names$ -- 209
+pop$ -- 1327
 preamble$ -- 1
-purify$ -- 53
+purify$ -- 79
 quote$ -- 0
-skip$ -- 489
+skip$ -- 841
 stack$ -- 0
-substring$ -- 326
-swap$ -- 243
-text.length$ -- 74
-text.prefix$ -- 4
+substring$ -- 395
+swap$ -- 464
+text.length$ -- 142
+text.prefix$ -- 7
 top$ -- 1
-type$ -- 102
+type$ -- 178
 warning$ -- 0
-while$ -- 89
+while$ -- 127
 width$ -- 0
-write$ -- 59
-(There was 1 warning)
+write$ -- 98

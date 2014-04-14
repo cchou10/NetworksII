@@ -286,7 +286,7 @@ which is part of the Java runtime environment. Because the bytecode language
 is much more structured and easier to analyze than the textual Java 
 programming language itself, we chose to construct the call-graph of the 
 translated bytecode (encapsulated in the \emph{.class} files). In order to 
-parse and work with compiled code, we used the well-established OCW ASM2 
+parse and work with compiled code, we used the well-established OW2 ASM 
 package. \cite{ocwasm} 
 
 Since we only care about the invocation relationship between the different 
@@ -343,7 +343,7 @@ Now, let $\bar k = \log k, \bar y = \log y, \bar C = \log C$, let $n = \g{length
  $$\small A = \mat{1 & \bar k_1 \\ 1 & \bar k_2 \\ \vdots \\ 1 & \bar k_n}$$ 
 then we are attempting to find the solution $x = \pa{\bar C, -\gamma}^T$ such 
 that $\min_x \|Ax - \bar y\|$ is minimized. We can solve this via the normal equation 
-\cite{linalg} so that  $x = (A^TA)^{-1}A^T\bar y$. Since this is just a 2 by 2 system
+\cite{mcomp} so that  $x = (A^TA)^{-1}A^T\bar y$. Since this is just a 2 by 2 system
 $$
 x = \mat{n & \sum_i \bar k_i \\ \sum_i \bar k_i & \bar k^T\bar k}^{-1} 
 \mat{\sum_i \bar y_i \\ \bar k^T\bar y} 
