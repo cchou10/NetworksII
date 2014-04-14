@@ -190,12 +190,30 @@ Define the call-graph induced by program $P$ to be
 $$G_P = \pa{\ba{\vec f}, \co{calls}}$$
 such that the nodes of $G_P$ are the functions in the program and the edges are the pairs $(f,g) \in \co{calls}$\footnote{Recall notationally, $f\co{calls}g$ is equivalent to $(f,g) \in \co{calls}$} so that we connect an edge from $f$ to $g$ if $f$ can call $g$.
 
-Because programming languages obey a very strict semantic model, we hypothesized that this likely means that there's some kind of preferential attachment to certain functions over others. As such, we believed that $G_P$ will be scale-free in the sense that
+Because programming languages obey a very strict semantic model, we hypothesized that this likely means that there's some kind of preferential attachment to certain functions over others. As such, we believed that $G_P$ will be scale-free in the sense that\cite{DUR}
 \begin{itemize}
-\item The indegree distribution of the nodes of $G_P$ forms a powerlaw distribution; suppose $p(k)$ is the probability that a vertex in $G_P$ has indegree $k$, then $p(k) ~ C k^{-\gamma}$ and
+\item The indegree distribution of the nodes of $G_P$ forms a powerlaw distribution; suppose $p(k)$ is the probability that a vertex in $G_P$ has indegree $k$, then $p(k) \sim C k^{-\gamma}$ and
 \item furthermore, $2 \le \gamma \le 3$.
 \end{itemize}
-It turns out that scale-free networks have various useful properties that we can exploit, one of which is the characterization of the expected maximum indegree of the graph, which corresponds to the function in $G_P$ that gets \emph{called into} the most often. 
+It turns out that scale-free networks have various useful properties that we can exploit, one of which is the characterization of the expected maximum indegree of the graph $k_{max}$, which corresponds to the function in $G_P$ that gets \emph{called into} the most often. 
+\section*{Characterizing $k_{max}$ for Scale-Free Networks}
+Recall that the indegree distribution of a scale-free network has probability density function
+$$
+p(k) = C k^{-\gamma}
+$$
+where 
+$$
+C \sum_{k=0}^\infty k^{-\gamma} = 1 \implies C = \frac{1}{\sum\limits_{k=0}^\infty k^{-\gamma}} = \zeta(\gamma)^{-1}
+$$
+if we approximate $\sum \approx \int$, then
+$$
+\zeta(\gamma) \approx \int_1^\infty x^{-\gamma} dx = \pa{\gamma-1}^{-1}
+$$
+Now, suppose we want to find $k_{max}$, then in a discrete sense, we would expect that the probability of $p(k > k_{max})$ must be smaller than the probability to just pick one node out of all of the $n$ nodes, so that, working in the continuous approximation
+$$
+\int_{k_{max}}^\infty (\gamma -1)k^{-\gamma} dk = k_{max}^{1-\gamma} \approx \frac{1}{n}
+$$
+and so $k_{max} \approx \sqrt[\gamma - 1]{n}$. \cite{CLASS}
 
 \medskip
 
