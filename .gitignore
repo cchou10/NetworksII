@@ -9,6 +9,9 @@
 *.dvi
 intermediate/*.xml
 *.out
+*.bbl
+*.blg
+*-blx.bib
 
 # Java compiled files
 callgraph/build
