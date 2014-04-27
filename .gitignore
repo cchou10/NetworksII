@@ -15,3 +15,5 @@ intermediate/*.xml
 
 # Java compiled files
 callgraph/build
+callgraph/com
+callgraph/META-INF

@@ -58,6 +58,20 @@ public class AnalysisState {
         return map;
     }
 
+    public static Map<Integer, Integer> cumulativeDistribution(Map<Integer, Integer> dist) {
+        List<Integer> arr = Lists.newArrayList(dist.keySet());
+        Collections.sort(arr);
+        Map<Integer, Integer> map = Maps.newHashMap();
+        Integer acc = 0, tot = 0;
+        for (int k : arr) tot += dist.get(k);
+        for (int k : arr) {
+            acc += dist.get(k);
+            if (tot - acc == 0) break;
+            map.put(k,tot - acc);
+        }
+        return map;
+    }
+
     public static double[] coefs(Map<Integer, Integer> dist) {
         // let A be n by 2 = [1 & log k(1); 1 & log k(2); ...] then we want to solve the system
         // A*[c; g] = log[y(1); y(2); ...]

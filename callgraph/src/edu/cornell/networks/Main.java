@@ -51,11 +51,13 @@ public class Main {
         // compute indegree and outdegree maps
         Map<String, Integer> in = state.getIn(), out = state.getOut();
         Map<Integer, Integer> dist = AnalysisState.distribution(in);
+
         double[] coefs = AnalysisState.coefs(dist);
+        double[] c2 = AnalysisState.coefs(AnalysisState.cumulativeDistribution(dist));
         System.out.println(dist);
         System.out.printf("%s, %s\n",coefs[0], coefs[1]);
         // compute linear fit coefficient. Use n by 2 vandermonde matrix algebra.
-        System.out.println(AnalysisState.plotInOctave(dist, coefs[0], coefs[1]));
+        System.out.println(AnalysisState.plotInOctave(dist, c2[0], c2[1]-1));
     }
 
     static private void traverseFolder(final File folder, List<InputStream> files) {
