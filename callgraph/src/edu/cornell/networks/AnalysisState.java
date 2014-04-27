@@ -117,7 +117,7 @@ public class AnalysisState {
             x.append(i).append(",");
             y.append(distribution.get(i)).append(",");
         }
-        s.append("[").append(x).append("0],[").append(y).append("0],'o',k,y)\n");
+        s.append("[").append(x).append("0],[").append(y).append("0],'o',k,y)\ntitle('gamma = ").append(g).append("');\n");
         s.append("x = [").append(x).append("0]; \ny = [").append(y).append("0]");
         return s.toString();
     }
