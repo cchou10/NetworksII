@@ -8,6 +8,7 @@
 *.pdf
 *.dvi
 intermediate/*.xml
+final/*.xml
 *.out
 *.bbl
 *.blg
