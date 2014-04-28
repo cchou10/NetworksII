@@ -30,6 +30,7 @@ public class Main {
                 ClassReader cr = new ClassReader(classFile);
                 ClassNode cn = new ClassNode();
                 cr.accept(cn, ClassReader.SKIP_DEBUG);
+                @SuppressWarnings("unchecked")
                 List<MethodNode> methods = cn.methods;
 
                 for (MethodNode method : methods) {
