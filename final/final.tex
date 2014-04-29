@@ -6,14 +6,108 @@
 \date{\today}
 
 \begin{document}
+\begin{singlespace}
 
 \maketitle
 
 \begin{abstract}
-Lorem ipsum dolor sit amet.
+\emph{We explore a novel approximate measure in the efficiency of large-scale
+software engineering projects. Many software systems are so large and complex
+that it is impossible to reason about their runtime properties using
+conventional techniques in runtime analysis. Our approach treats the
+interaction between the different subroutines of a system as network behaviors
+and approximates the running time via the distribution of static function
+calls.}
+
+\emph{Having experimentally determined that various large software systems
+behave like scale-free networks, we gain an asymptotic characterization of the
+growth of the max-degree node within the call-graph, which lets us approximate
+that the running time of such systems with code size $n$ slows down according
+to $O\left(\sqrt[\alpha]{n}\right)$ for some $1<\alpha\leq 2$.}
+% TODO: Add specific information about experimental results.
 \end{abstract}
+
+\hspace*{3,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
+engineering, static analysis, linear interpolation}
+\vspace{10pt}
 
 \section{Introduction}
 
+One of the biggest problems in software engineering is trying to reason about
+the efficiency of the software system being developed. Traditional runtime
+analysis techniques tend to focus on algorithms as individual components.
+Because of the inherent difficulty in exploring the relationship between
+large numbers of different components of the system, such techniques are
+rarely amenable to large-scale projects.
+
+Conventional techniques are rather cumbersome and require a lot of
+sophisticated machinery. Oftentimes, these techniques do not scale to large
+projects with complex interactions between their various subroutines. However,
+conventional wisdom and experience in profiling and optimizing code indicate
+that most benefits come from reducing either code size or the complexity of
+the functions that get called most often. As such, we devise a measure of the
+complexity of a project based on how many incoming function calls each
+function might receive.
+
+\section{Model}
+
+One motivation for the aforementioned measure is that it maps to the in-degree
+$k_{max}$ parameter -- the expected maximum degree of the nodes of a network --
+of a graph structure that models the calls-into interaction between the various
+functions, which we will henceforth refer to as a \emph{call-graph}.
+
+More formally, using a simplified model, define a program $P$ as a collection
+of functions $\ba{\vec{f}}$ along with a \emph{main function}
+$f^{\ast}\in\ba{\vec{f}}$ acting as the entry-point. Define the function
+\[\f{calls-to}:\g{fun}\to\g{set}(\g{fun})\]
+which returns the set of functions that \emph{can} be called.\footnote{This is
+a subtle notion, since the function $f\triangleq\lambda x: \Iff{\False}{g(x)}
+{h(x)}$ cannot in actuality call $g$, but since this occurs so rarely in
+practice, we can approximate that $f$ can call $\{g,h\}$.} Furthermore, define
+a relation $\co{calls}\subseteq\g{fun}\times\g{fun}$ such that
+\[f\co{calls} g \iff g \in \f{calls-to}(f).\]
+The \emph{call-graph induced by program} $P$ is then
+\[G_P=\pa{\ba{\vec{f}},\co{calls}},\]
+i.e. the nodes of $G_P$ represent the functions of the program $P$ and the
+edges are the pairs $(f,g)\in\co{calls}$, that is, $f\co{calls} g$, so that
+we can connect an edge from $f$ to $g$ if $f$ can call $g$.
+
+Because programming languages obey a strict semantic model, we hypothesize that
+there exists a preferential attachment to certain functions over others.
+Consequently, we believe that $G_P$ will be scale-free in the sense that
+the in-degree distribution of the nodes of $G_P$ forms a power law
+distribution:\cite{DUR}
+\begin{itemize}
+\item suppose $p(k)$ is the probability that there exists a vertex in $G_P$
+with indegree $k$; then $p(k)\sim Ck^{-\gamma}$ and
+\item further, $2\leq\gamma\leq 3$.
+\end{itemize}
+
+It turns out that scale-free networks have various useful properties that we
+can exploit, one of which is the characterization of the expected maximum
+in-degree $k_{max}$ of the graph, which corresponds to the function in $G_P$
+which gets \emph{called into} the most often.
+
+\section{Characterizing $k_{max}$ for Scale-Free Networks}
+
+Recall that the in-degree distribution of a scale-free network has probability
+density function $p(k)=Ck^{-\gamma}$, where
+\[\sum_{k=0}^{\infty} p(k) = C\sum_{k=0}^{\infty} k^{-\gamma} = 1.\]
+That is,
+\begin{equation}C=\left(\sum_{k=0}^{\infty} k^{-\gamma}\right)^{-1}
+=\zeta(\gamma)^{-1}.\end{equation}
+Using the continuous approximation, we have
+\begin{equation}\zeta(\gamma)\approx \int_1^{\infty} x^{-\gamma} dx
+=(\gamma-1)^{-1}.\end{equation}
+
+In a discrete sense, we expect that the probability $p\left(k>k_{max}\right)$
+must be smaller than the probability of choosing just one node from the set
+of $n$ nodes, so that, working in the continuous approximation,
+\begin{equation}\int_{k_{max}}^{\infty} (\gamma-1)k^{-\gamma} dk
+=k_{max}^{1-\gamma}\approx \frac{1}{n}.\end{equation}
+Hence $k_{\max}\approx \sqrt[1-\gamma]{n}$ \cite{CLASS}.
+
 \printbibliography[title={References}]
+
+\end{singlespace}
 \end{document}
