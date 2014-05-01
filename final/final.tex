@@ -5,6 +5,16 @@
 \title{Scale-Free Networks in Static Call Graphs}
 \date{\today}
 
+% We only want this in the final report, not the intermedidate report.
+\setlength{\jot}{.3cm}
+\makeatletter
+\renewcommand*\env@matrix[1][\arraystretch]{%
+  \edef\arraystretch{#1}%
+  \hskip -\arraycolsep
+  \let\@ifnextchar\new@ifnextchar
+  \array{*\c@MaxMatrixCols c}}
+\makeatother
+
 \begin{document}
 \begin{singlespace}
 
@@ -109,6 +119,105 @@ of $n$ nodes, so that, working in the continuous approximation,
 \begin{equation}\int_{k_{max}}^{\infty} (\gamma-1)k^{-\gamma} dk
 =k_{max}^{1-\gamma}\approx \frac{1}{n}.\end{equation}
 Hence $k_{\max}\approx \sqrt[1-\gamma]{n}$ \cite{CLASS}.
+
+\section{Static Analysis Framework}
+
+In order to test our hypothesis, we first needed to create the tools required
+to construct $G_P$. We chose to analyze Java programs because of the large
+quantity of open source software that we can use as well as the existing
+support for doing this type of analysis in Java.
+
+Redistributed Java software is typically composed of a collection of
+\emph{bytecode} which can be executed by the Java Virtual Machine. Because the
+bytecode language is much more structured and easier to analyze than the
+textual Java programming language itself, we chose to construct the call-graph
+of the translated bytecode. This also allows us to avoid issues such as
+parsing and type inference which are handled by the Java compiler. In order
+to parse and analyze the compiled bytecode, we used the OW2 ASM library
+\cite{ocwasm}.
+
+\begin{algorithm}
+\caption{Constructing the Call Graph}
+\begin{algorithmic}
+\Function{Analyze}{$P = \ba{\vec f}$}
+\State $G_P \gets \g{new}~ \g{Graph}()$
+\For{$\g{fun}~f \in P$}
+\For{$\g{instruction}~i \in f.\g{instructions}$}
+\If{$i$ is a method-call to $\g{fun}~g$}
+\State Add edge $f \to g$ into $G_P$
+\EndIf
+\EndFor
+\EndFor
+\EndFunction
+\end{algorithmic}
+\label{fig:construction}
+\end{algorithm}
+
+The static analysis of the compiled bytecode is not difficult, since we are
+only interested in the invocation relationship between different functions. We
+first construct the call-graph $G_P$ according to the algorithm in Algorithm
+~\ref{fig:construction}. We then compute the in-degree frequency of $G_P$,
+which counts the number of edges coming into each function in $G_P$. The
+abstract notion of a frequency table is represented concretely as a mapping
+$\f{FreqIn}:\g{fun}\to\mathbb{N}$ within our analysis. We then compute the
+distribution of the degrees also concretely as a mapping $\f{Dist}:\mathbb{N}
+\to\mathbb{N}$ which maps each positive degree $d$ to the number of nodes of
+degree $d$ within $G_P$.
+
+\section{Assessing Goodness of Fit and Linear Interpolation}
+
+We analyzed the source code of seven large open source Java projects, including
+Google Guava and ANTLR, and found that the degree distribution in each follows
+a power law based on their \g{loglog} plots. Recall that if a distribution has
+density $p(k)\sim Ck^{-\gamma}$, then $\log(p(k))=\log(C)-\gamma\log(k)$, so
+its distribution should look roughly linear.
+
+In order to determine the power law coefficient $\gamma$, we turn to linear
+algebra. We have a list of degrees $k$ and a list of degree frequencies $y$,
+and we want to find the parameters $C,\gamma$ so that $\hat{y}(k)=Ck^{-\gamma}$
+best fits the observed data. Since non-linear interpolation is a hard problem,
+we can transform the data logarithmically into the linear interpolation
+problem
+\begin{equation}\label{eq:linint}
+\arg\min_{C,\gamma} \|(\log(C)-\gamma\log(k))-\log(y)\|_2^2.\end{equation}
+A monotonicity argument with respect to $\log$ guarantees that the minimum
+of this system is also optimal when we transform this instance back to the
+non-linear version via $\exp$.
+
+% TODO(blc) fix equation refs
+Now, let $\bar{k}_i=\log k_i$, $\bar{y}_i=\log y_i$,
+$\bar{C}=\log C$, $n=\g{length}(k)$, and let $A$ be the $n\times 2$ matrix
+\[A=\begin{pmatrix}1&&\bar{k}_1\\ 1&&\bar{k}_2\\ &\vdots&\\ 1&&\bar{k}_n
+\end{pmatrix}.\]
+Then our linear interpolation problem~\ref{eq:linint} is equivalent to finding
+$x=\left(\bar{C},-\gamma\right)^T$ such that $\min_x \|Ax-\bar{y}\|$ is
+minimized. We can solve this via the normal equation \cite{mcomp} so that
+$X=\left(A^T A\right)^{-1} A^T\bar{y}$. That is,
+\begin{align*}x&=\begin{pmatrix}[2]n&\sum \bar{k}\\
+\sum \bar{k} & \bar{k}^T\bar{k}\end{pmatrix}^{-1}
+\begin{pmatrix}[2]\sum \bar{y}\\ \bar{k}^T\bar{y}\end{pmatrix}\\
+&=\frac{
+\begin{pmatrix}[2]\bar{k}^T\bar{k}\cdot\sum\bar{y}-\sum\bar{k}\cdot
+\bar{k}^T\bar{y}\\ n\bar{k}^T\bar{y}-\left(\sum \bar{k}\right)
+\left(\sum\bar{y}\right)\end{pmatrix}
+}{n\cdot\bar{k}^T\bar{k}-\left(\sum \bar{k}\right)^2}.\end{align*}
+Thus we get a power law coefficient
+\begin{equation} \label{eq:gamma}
+\gamma=\frac{\left(\sum\bar{k}\right)\left(\sum \bar{y}\right)
+-n\bar{k}^T\bar{y}}{n\bar{k}^T\bar{k}-\left(\sum \bar{k}\right)^2},
+\end{equation}
+which is easily computable.
+
+% TODO(Lee) explain why scale-free networks are what's good
+% TODO cite Guava and other projects we directly reference
+In the case of Google Guava, the distribution has coefficient $\gamma\approx
+2.7$, which suggests that it is within the realm of a scale-free network
+\cite{CLASS}.
+
+% TODO(Lee) talk about fat tails and cdfs
+
+% TODO(Favian) throw in graphs and references to the rest of the data
+% and talk about results
 
 \printbibliography[title={References}]
 
