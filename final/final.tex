@@ -339,9 +339,7 @@ of their large software on the order of $O(\sqrt[1.23]{n})$ where $n$ is the num
 lines\footnote{Best practice dictates that all functions should be less than $100$ lines
 of code, so the number of functions is bounded above by an affine function of
 the number of lines of code.} of code.
-\subsection*{Limitations}
-% TODO: someone do this part
-% Also talk about directions for possible future work.
+\subsection*{Limitations and Future Work}
 
 The main limitations of this method are the assumptions that need to be made in
 order for the results to be valid.
@@ -358,6 +356,21 @@ functions, meaning that the overall runtime only grows as the complexity of
 each function grows. This is an approximation of real-life scenarios, since
 it is not always true that increasing the size of a project increases its
 runtime complexity.
+
+Possible directions for future work could include ways of making our
+approximation more faithful. For example, instead of examining only the
+max-degree node in the call-graph, we could add higher order terms by also
+examining the second-max-degree node, or the top $n$-degree nodes in general.
+This will increase the complexity of the calculations in the analysis and
+will provide diminishing returns for the efficacy of our approximation.
+
+Another possible, more complex direction for future work is to incorporate
+this analysis into dynamic analysis. Above, we made the approximation that
+the in-degree of a node in the call-graph corresponds to how frequently it is
+called at runtime, but this may not necessarily be the case, as seen in the
+artificial example in the footnote. Including experimental elements from
+the dynamic behavior of the program will certainly increase the accuracy of
+our analysis.
 
 \section{Related Works}
 % TODO: someone do this part too
