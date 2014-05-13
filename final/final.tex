@@ -34,7 +34,6 @@ behave like scale-free networks, we gain an asymptotic characterization of the
 growth of the max-degree node within the call-graph, which lets us approximate
  the running time of such systems with code size $n$ according
 to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.23$.}
-% TODO(Favian): Add specific information about experimental results.
     \end{abstract}
     \hspace*{7,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
 engineering, static analysis, linear interpolation}
@@ -75,6 +74,8 @@ measuring the complexity and the bloat of a large software project is to measure
 the expected \emph{most} number of calls that any function within the software 
 will receive.
 
+%TODO find real citation for 'something'
+
 While this expected maximum number of called function is somewhat difficult/tedious
 to compute, we found that it is possible to accurately
 estimate this statistic using only the number of functions alone. We introduce a 
@@ -83,9 +84,6 @@ as a call-graph and posit that all such graph structures exhibit powerlaw degree
 distribution. Using existing analysis on such networks, we develop an analytic 
 model describing the growth of the runtime complexity of software based on the
 number of subroutines.
-
-%\section{Related Work}
-% TODO(Lee): Add a couple paragraphs about existing related work.
 
 \section{Mathematical Model}
 \subsection{Viewing a Program as a Network}
@@ -302,6 +300,7 @@ the appendix.
 As we can see in figure \ref{fig:guava} and \ref{fig:deg}, the degree distributions of
 all of the call-graphs we analyzed are roughly powerlaws. In fact, we have a sample of
 $\gamma$ of
+% TODO Cite these projects
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|} \hline
@@ -343,22 +342,14 @@ the number of lines of code} of code.
 \section{Related Works}
 % TODO: someone do this part too
 
-
-
-
-
-% (Lee) explain why scale-free networks are what's good - already did in section 2
-%  cite Guava and other projects we directly reference
 %In the case of Google Guava, the distribution has coefficient $\gamma\approx
 %2.7$, which suggests that it is within the realm of a scale-free network
 %\cite{CLASS}.
 
-% TODO(Lee) talk about fat tails and cdfs
-
-% TODO(Favian) throw in graphs and references to the rest of the data
-% and talk about results
 \newpage
 \printbibliography[title={References}]
+
+% TODO appendix with source code
 
 \end{singlespace}
 \end{document}
