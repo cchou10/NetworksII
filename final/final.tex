@@ -5,6 +5,10 @@
 \title{Scale-Free Networks in Static Call Graphs}
 \date{\today}
 
+% Prevent inline equations from breaking across lines
+\relpenalty=10000
+\binoppenalty=10000
+
 % We only want this in the final report, not the intermedidate report.
 \setlength{\jot}{.3cm}
 \makeatletter
@@ -21,11 +25,11 @@
   \begin{@twocolumnfalse}
     \maketitle
     \begin{abstract}
-{We explore a novel approximate measure in the efficiency of large-scale
+{We explore a novel approximate measure of the efficiency of large-scale
 software engineering projects. Many software systems are so large and complex
 that it is impossible to reason about their runtime properties using
 conventional techniques in runtime analysis. Our approach treats the
-interaction between the different subroutines of a system as network behaviors
+interaction between the different subroutines of a system as network behavior
 and approximates the running time via the distribution of static function
 calls.}
 
@@ -33,7 +37,7 @@ calls.}
 behave like scale-free networks, we gain an asymptotic characterization of the
 growth of the max-degree node within the call-graph, which lets us approximate
  the running time of such systems with code size $n$ according
-to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.23$.}
+to $O\left(\sqrt[\alpha]{n}\right)$ for $\alpha \approx 1.23$.}
     \end{abstract}
     \hspace*{7,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
 engineering, static analysis, linear interpolation}
@@ -53,10 +57,10 @@ large numbers of different components of the system, such techniques are
 rarely amenable to large-scale projects.
 
 Traditional techniques are rather cumbersome to wield and require a lot of
-sophisticated machinery and analysis. 
+sophisticated machinery and analysis.
 Oftentimes, these techniques do not scale to large
-projects with complex caller-callee relationships between their various subroutines. 
-However, conventional wisdom and anecdotal experience in the profiling and 
+projects with complex caller-callee relationships between their various subroutines.
+However, conventional wisdom and anecdotal experience in the profiling and
 optimization of software code indicate
 that most of the benefits come from reducing the complexity of
 the functions that get called most often. As such, we devise a measure of the
@@ -64,24 +68,23 @@ complexity of a project based on how many incoming function calls each
 function might receive.
 
 Using this rule of thumb, one might then view the complexity of the caller-callee
-relationship of each function as a statistical measure of the the runtime of the 
-software been developed. For one thing, if a subroutine $f$ is called by a million 
-different functions, then by reducing the overall runtime of $f$ by a small factor 
+relationship of each function as a statistical measure of the the runtime of the
+software been developed. For example, if a subroutine $f$ is called by a million
+different functions, then by reducing the overall runtime of $f$ by a small factor
 might net us a million-fold increase in efficiency. Indeed, it has been observed
-time and time again \cite{something} that the most-called function of a software 
-is typically the bottle neck in the software runtime. Therefore, a natural idea for
-measuring the complexity and the bloat of a large software project is to measure 
-the expected \emph{most} number of calls that any function within the software 
+time and time again \cite{something} that the most-called function of a program
+is typically the bottleneck in the software runtime. Therefore, a natural idea for
+measuring the complexity and the bloat of a large software project is to measure
+the expected \emph{most} number of calls that any function within the software
 will receive.
-
 %TODO find real citation for 'something'
 
-While this expected maximum number of called function is somewhat difficult/tedious
-to compute, we found that it is possible to accurately
-estimate this statistic using only the number of functions alone. We introduce a 
+While this expected maximum number of called function is somewhat difficult and
+tedious to compute, we found that it is possible to accurately
+estimate this statistic using only the number of functions alone. We introduce a
 network modeling the caller-callee interaction between various subroutines known
-as a call-graph and posit that all such graph structures exhibit powerlaw degree 
-distribution. Using existing analysis on such networks, we develop an analytic 
+as a call-graph and posit that all such graph structures exhibit a power law degree
+distribution. Using existing analysis on such networks, we develop an analytic
 model describing the growth of the runtime complexity of software based on the
 number of subroutines.
 
@@ -144,7 +147,7 @@ of $n$ nodes ($\frac{1}{n}$), so that, working in the continuous approximation,
 Hence $k_{\max}\approx \sqrt[\gamma - 1]{n}$ asymptotically in $n$ \cite{CLASS}.
 
 In essence, if we can confirm that call-graphs are typically scale-free, then we know
-that the maximally called function with $k_{max}$ calls grow according to 
+that the maximally called function with $k_{max}$ calls grow according to
 $\sqrt[\gamma - 1]{n}$ for some constant parameter $\gamma$ in $n$ functions.
 \section{Call-graphs are Scale-Free}
 \subsection{Static Analysis Framework}
@@ -218,7 +221,7 @@ Now, let $\bar{k}_i=\log k_i$, $\bar{y}_i=\log y_i$,
 $\bar{C}=\log C$, $n=\g{length}(k)$, and let $A$ be the $n\times 2$ matrix
 \[A=\begin{pmatrix}1&&\bar{k}_1\\ 1&&\bar{k}_2\\ &\vdots&\\ 1&&\bar{k}_n
 \end{pmatrix}.\]
-Then our linear interpolation problem~\eqref{eq:linint} is equivalent to finding
+Then our linear interpolation problem (4) is equivalent to finding
 $x=\left(\bar{C},-\gamma\right)^T$ such that $\min_x \|Ax-\bar{y}\|$ is
 minimized. We can solve this via the normal equation \cite{mcomp} so that
 $x=\left(A^T A\right)^{-1} A^T\bar{y}$. That is,
@@ -235,55 +238,56 @@ Thus we get a power law coefficient
 \gamma=\frac{\left(\sum\bar{k}\right)\left(\sum \bar{y}\right)
 -n\bar{k}^T\bar{y}}{n\bar{k}^T\bar{k}-\left(\sum \bar{k}\right)^2},
 \end{equation}
-which is easily computable by algorithm 2.
+which is easily computable by Algorithm 2.
 \begin{algorithm}
-\caption{Powerlaw Fitting}
+\caption{Power Law Fitting}
 \begin{algorithmic}
 \Function{PowerInterpolate}{$k, y$}
 \State $n \gets \g{len}(k)$
 \State $\bar k, \bar y \gets \log(k), \log(y)$
 \State $s_k, s_y \gets \g{sum}(\bar k), \g{sum}(\bar y)$
 \State $k_k, k_y \gets \g{dot}(\bar k, \bar k), \g{dot}(\bar k, \bar y)$
-\State \Return $\frac{s_k \times s_y - n \times k_y}{n \times k_k - s_k^2}$
+\State \Return $(s_k \times s_y - n \times k_y)/(n \times k_k - s_k^2)$
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-More concretely, we implemented this within our static analysis as the function 
-\g{coefs} in the appendix which takes in a mapping $\g{dist}$ where 
-$y = \g{dist}(k)$ gives the 
+More concretely, we implemented this within our static analysis as the function
+\g{coefs} in the appendix which takes in a mapping $\g{dist}$ where
+$y = \g{dist}(k)$ gives the
 number of vertices that have $k$ as their in-degree.
 
 \subsection{Analysis}
-We implemented the analysis platform described in the previous two subsections on
-various software projects. We then plotted the sample degree distribution on a log-log 
-scaled plot and looked at the powerlaw interpolation described in section 3.2. 
+We implemented the analysis platform described in the previous two subsections
+and ran it on
+various software projects. We then plotted the sample degree distribution on a log-log
+scaled plot and looked at the power law interpolation described in section 3.2.
 \begin{figure}
 \centering
 \caption{Log-Log degree distribution for the JUnit project.\label{fig:marsold}}
 \includegraphics[scale=0.45]{images/marsold}
 \end{figure}
 For every project we analyzed, we saw clear linear trends at the initial segment of the
-data, which is highly suggestive of the powerlaw nature of the degree distribution. 
-Unfortunately, since the in-degree cannot be fractional, we begin seeing the tail 
-of this distribution getting flattened out to $y = 1$, which ends up heavily skewing 
+data, which is highly suggestive of the power law nature of the degree distribution.
+Unfortunately, since the in-degree cannot be fractional, we begin seeing the tail
+of this distribution getting flattened out to $y = 1$, which ends up heavily skewing
 the exponent $\gamma$, as can be seen in figure \ref{fig:marsold}.
 
 This ``skewing'' of the linear regression can be corrected by instead looking at the
 cumulative density of the data \cite{CLASS}. Consider the probability density function
 $p(k) = C k^{-\gamma}$ and let the random variable $K$ be such that $K = k$ is the
-event that a random vertex has in-degree of $k$. We know that 
-$$P(K > k) = 1 - \sum_{i = 1}^k Ci^{-\gamma} = Ck^{1 - \gamma}$$
-however, the cumulative sum of the sample data is more stable because the low-frequency
+event that a random vertex has in-degree of $k$. We know that
+$$P(K > k) = 1 - \sum_{i = 1}^k Ci^{-\gamma} = Ck^{1 - \gamma}.$$
+The cumulative sum of the sample data is more stable because the low-frequency
 tail will contribute negligibly to the cumulative sum if there are a lot of data already.
 \begin{figure}[H]
 \centering
 \includegraphics[scale=0.45]{images/guava}
 \caption{Regression after fixing the fat-tail.\label{fig:guava}}
 \end{figure}
-Therefore, we found that if we compute the sample cumulative instead and get its 
-linear regression, we essentially remove all of the noise as can be see in figure 
-\ref{fig:guava}. 
-This is computed by the \g{cumulativeDistribution} subroutine within the code in 
+Therefore, we found that if we compute the sample cumulative instead and get its
+linear regression, we essentially remove all of the noise as can be see in figure
+\ref{fig:guava}.
+This is computed by the \g{cumulativeDistribution} subroutine within the code in
 the appendix.
 \begin{figure*}
 \centering
@@ -298,13 +302,13 @@ the appendix.
 \includegraphics[scale=0.5]{images/xstream}
 \end{figure*}
 As we can see in figure \ref{fig:guava} and \ref{fig:deg}, the degree distributions of
-all of the call-graphs we analyzed are roughly powerlaws. In fact, we have a sample of
+all of the call-graphs we analyzed roughly follow power laws. In fact, we have a sample of
 $\gamma$ of
 % TODO Cite these projects
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|} \hline
-Project & $\gamma$ \\ \hline 
+Project & $\gamma$ \\ \hline
 ANTLR & 2.1441 \\
 Guava & 2.3121 \\
 JUNIT & 2.1025 \\
@@ -314,28 +318,28 @@ Webmagic & 2.2382 \\
 Xstream & 2.2592 \\ \hline
 \end{tabular}
 \end{table}
-which seems to be tightly packed around $2.2$. In fact, the sample mean is 
+\noindent which seems to be tightly packed around $2.2$. In fact, the sample mean is
 $\bar \gamma = 2.2371$. Assuming that these observations are all independent
-of each other, then we can argue that the limiting distribution of these coefficients
+of one another, we can argue that the limiting distribution of these coefficients
 is likely normal, so we can apply a statistical t-test with 6 degrees of freedom to find
-that there's 95\% confidence that the population average of the coefficient $\gamma$ 
+that there is 95\% confidence that the population average of the coefficient $\gamma$
 for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we have
- statistically significant evidence to believe that on average 
+ statistically significant evidence to believe that on average
  $p(k) = O(k^{\bar \gamma})$ for some $\bar \gamma \in [2.159581, 2.314648]$.
 \section{Conclusion}
 By modeling the relationship of callee relationships within large java projects, we were
-able to experimental determine that there are statistically significant evidence supporting
+able to experimentally determine statistically significant evidence supporting
 the claim that the density of the random event $K = k$\footnote{the event that a randomly
-chosen vertex has in-degree $k$} is roughly powerlaw on the order of around 
-$$p(k) = \frac{k^{-2.23}}{\zeta(2.23)}$$. In addition, this scale-freeness property yields 
-the additional relationship that $k_{max}$, the degree of the most called function, is on the order of 
+chosen vertex has in-degree $k$} roughly follows a power law on the order of around
+$$p(k) = \frac{k^{-2.23}}{\zeta(2.23)}.$$ In addition, this scale-freeness property yields
+the additional relationship that $k_{max}$, the degree of the most called function, is on the order of
 $$k_{max} \sim O(\sqrt[1.23]{n})$$ where $n$ is the number of functions there are in the program.
 
-Furthermore, this allows profilers to keep a quick estimate of the runtime complexity 
-of their large software on the order of $O(\sqrt[1.23]{n})$ where $n$ is the number of 
+Furthermore, this allows profilers to keep a quick estimate of the runtime complexity
+of their large software on the order of $O(\sqrt[1.23]{n})$ where $n$ is the number of
 lines\footnote{Best practice dictates that all functions should be less than $100$ lines
 of code, so the number of functions is bounded above by an affine function of
-the number of lines of code} of code.
+the number of lines of code.} of code.
 \subsection*{Limitations}
 % TODO: someone do this part
 % Also talk about directions for possible future work.
