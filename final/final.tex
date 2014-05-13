@@ -339,6 +339,7 @@ of their large software on the order of $O(\sqrt[1.23]{n})$ where $n$ is the num
 lines\footnote{Best practice dictates that all functions should be less than $100$ lines
 of code, so the number of functions is bounded above by an affine function of
 the number of lines of code.} of code.
+
 \subsection*{Limitations and Future Work}
 
 The main limitations of this method are the assumptions that need to be made in
@@ -373,14 +374,40 @@ the dynamic behavior of the program will certainly increase the accuracy of
 our analysis.
 
 \section{Related Works}
-% TODO: someone do this part too
 
 There has been a lot of research done on different kinds of runtime analysis as
 well as scale-free networks. Scale-free networks have very unique characteristics
 and have applications in a huge variety of topics. They can be used to analyze
 static call graphs in programming as we have done as well as many other types
 of networks. Examples include modeling protein networks to predict disease and
-other ailments by observing the interactions between specific proteins.
+other ailments by observing the interactions between specific proteins (and on
+a smaller scale, the metabolic network to observe cell energy usage through
+enzymes \cite{nisis}) and the most commonly known application: social network
+graphs. Social network graphs use the scale free model to analyze the
+interactions between users to map out friend groups and paint a profile of
+individual users from their interaction with interests and people in society
+\cite{DUR}.
+
+There have also been many ideas to perform runtime analysis on large scale systems.
+There are methods to perform automatic runtime analysis on first order
+functional programs. This applies to functional languages as opposed to our
+method which works exclusively on Java programs. The core concept is the same --
+comparing network interactions -- but the assumptions vary for functional
+programming \cite{Frederiksen02automaticruntime}.
+
+On a slightly different path, Neil Jones and Lars Kristiansen use a method that
+assumes a program is bounded by polynomials in the inputs. Under this assumption,
+there is a semantic relationship between the program and mwp-matrices. Their
+analysis shows the existence of such mwp-matrices and uses this model to derive
+the complexity \cite{Jones_aflow}.
+
+These methods still have their shortcomings though. The resulting analysis is
+still a coarse approximation and the analysis can only be performed on extremely
+regular structures: custom data structures do not work. There are already
+countless methods to perform runtime analysis on programs from emperical methods
+to orders of growth that are used regularly. However, these do not apply to
+extremely large programs. Analysis on such large platforms require a different
+methods and there are a variety of ideas being explored.
 
 %In the case of Google Guava, the distribution has coefficient $\gamma\approx
 %2.7$, which suggests that it is within the realm of a scale-free network
@@ -389,7 +416,6 @@ other ailments by observing the interactions between specific proteins.
 %\newpage
 \printbibliography[title={References}]
 
-% TODO appendix with source code
 \onecolumn
 \begin{appendices}
 \section{Static Analysis Source Code}
