@@ -33,7 +33,7 @@ calls.}
 behave like scale-free networks, we gain an asymptotic characterization of the
 growth of the max-degree node within the call-graph, which lets us approximate
  the running time of such systems with code size $n$ according
-to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.27$.}
+to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.23$.}
 % TODO(Favian): Add specific information about experimental results.
     \end{abstract}
     \hspace*{7,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
@@ -287,6 +287,42 @@ linear regression, we essentially remove all of the noise as can be see in figur
 \ref{fig:guava}. 
 This is computed by the \g{cumulativeDistribution} subroutine within the code in 
 the appendix.
+\begin{figure*}
+\centering
+\caption{Log-log degree distributions.\label{fig:deg}}
+\includegraphics[scale=0.5]{images/antlr}
+\includegraphics[scale=0.5]{images/JUNIT}
+
+\includegraphics[scale=0.5]{images/logisim}
+\includegraphics[scale=0.5]{images/MARS}
+
+\includegraphics[scale=0.5]{images/webmagic}
+\includegraphics[scale=0.5]{images/xstream}
+\end{figure*}
+As we can see in figure \ref{fig:guava} and \ref{fig:deg}, the degree distributions of
+all of the call-graphs we analyzed are roughly powerlaws. In fact, we have a sample of
+$\gamma$ of
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|c|} \hline
+Project & $\gamma$ \\ \hline 
+ANTLR & 2.1441 \\
+Guava & 2.3121 \\
+JUNIT & 2.1025 \\
+Logisim & 2.3231 \\
+MARS & 2.2806 \\
+Webmagic & 2.2382 \\
+Xstream & 2.2592 \\ \hline
+\end{tabular}
+\end{table}
+which seems to be tightly packed around $2.2$. In fact, the sample mean is 
+$\bar \gamma = 2.2371$. Assuming that these observations are all independent
+of each other, then we can argue that the limiting distribution of these coefficients
+is likely normal, so we can apply a statistical t-test with 6 degrees of freedom to find
+that there's 95\% confidence that the population average of the coefficient $\gamma$ 
+for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we have
+ statistically significant evidence to believe that on average 
+ $p(k) = O(k^{\bar \gamma})$ for some $\bar \gamma \in [2.159581, 2.314648]$.
 
 % TODO(Lee) explain why scale-free networks are what's good - already did in section 2
 % TODO cite Guava and other projects we directly reference
