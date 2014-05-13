@@ -261,8 +261,8 @@ various software projects. We then plotted the sample degree distribution on a l
 scaled plot and looked at the power law interpolation described in section 3.2.
 \begin{figure}
 \centering
-\caption{Log-Log degree distribution for the JUnit project.\label{fig:marsold}}
-\includegraphics[scale=0.45]{images/marsold}
+\caption{Degree distribution for JUnit.\label{fig:marsold}}
+\includegraphics[scale=0.4]{images/marsold}
 \end{figure}
 For every project we analyzed, we saw clear linear trends at the initial segment of the
 data, which is highly suggestive of the power law nature of the degree distribution.
@@ -277,11 +277,12 @@ event that a random vertex has in-degree of $k$. We know that
 $$P(K > k) = 1 - \sum_{i = 1}^k Ci^{-\gamma} = Ck^{1 - \gamma}.$$
 The cumulative sum of the sample data is more stable because the low-frequency
 tail will contribute negligibly to the cumulative sum if there are a lot of data already.
-\begin{figure}[H]
+\begin{figure}
 \centering
-\includegraphics[scale=0.45]{images/guava}
+\includegraphics[scale=0.4]{images/guava}
 \caption{Regression after fixing the fat-tail.\label{fig:guava}}
 \end{figure}
+
 Therefore, we found that if we compute the sample cumulative instead and get its
 linear regression, we essentially remove all of the noise as can be see in figure
 \ref{fig:guava}.
