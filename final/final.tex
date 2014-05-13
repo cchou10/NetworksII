@@ -323,9 +323,32 @@ that there's 95\% confidence that the population average of the coefficient $\ga
 for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we have
  statistically significant evidence to believe that on average 
  $p(k) = O(k^{\bar \gamma})$ for some $\bar \gamma \in [2.159581, 2.314648]$.
+\section{Conclusion}
+By modeling the relationship of callee relationships within large java projects, we were
+able to experimental determine that there are statistically significant evidence supporting
+the claim that the density of the random event $K = k$\footnote{the event that a randomly
+chosen vertex has in-degree $k$} is roughly powerlaw on the order of around 
+$$p(k) = \frac{k^{-2.23}}{\zeta(2.23)}$$. In addition, this scale-freeness property yields 
+the additional relationship that $k_{max}$, the degree of the most called function, is on the order of 
+$$k_{max} \sim O(\sqrt[1.23]{n})$$ where $n$ is the number of functions there are in the program.
 
-% TODO(Lee) explain why scale-free networks are what's good - already did in section 2
-% TODO cite Guava and other projects we directly reference
+Furthermore, this allows profilers to keep a quick estimate of the runtime complexity 
+of their large software on the order of $O(\sqrt[1.23]{n})$ where $n$ is the number of 
+lines\footnote{Best practice dictates that all functions should be less than $100$ lines
+of code, so the number of functions is bounded above by an affine function of
+the number of lines of code} of code.
+\subsection*{Limitations}
+% TODO: someone do this part
+
+\section{Related Works}
+% TODO: someone do this part too
+
+
+
+
+
+% (Lee) explain why scale-free networks are what's good - already did in section 2
+%  cite Guava and other projects we directly reference
 %In the case of Google Guava, the distribution has coefficient $\gamma\approx
 %2.7$, which suggests that it is within the realm of a scale-free network
 %\cite{CLASS}.
@@ -334,7 +357,7 @@ for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we 
 
 % TODO(Favian) throw in graphs and references to the rest of the data
 % and talk about results
-
+\newpage
 \printbibliography[title={References}]
 
 \end{singlespace}
