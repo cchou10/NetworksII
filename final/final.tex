@@ -344,8 +344,31 @@ the number of lines of code.} of code.
 % TODO: someone do this part
 % Also talk about directions for possible future work.
 
+The main limitations of this method are the assumptions that need to be made in
+order for the results to be valid.
+
+As opposed to other methods which express runtime as a function relating input
+length to an asymptotic number of steps, our method relates the number of steps
+to the growth in \emph{lines of code} of a project. Further, our method can
+only provide an approximation, whereas methods of the former type are exact
+up to asymptotics.
+
+In addition, our entire methodology is based on the assumption that the overall
+runtime is approximately monotone with respect to the complexity of the
+functions, meaning that the overall runtime only grows as the complexity of
+each function grows. This is an approximation of real-life scenarios, since
+it is not always true that increasing the size of a project increases its
+runtime complexity.
+
 \section{Related Works}
 % TODO: someone do this part too
+
+There has been a lot of research done on different kinds of runtime analysis as
+well as scale-free networks. Scale-free networks have very unique characteristics
+and have applications in a huge variety of topics. They can be used to analyze
+static call graphs in programming as we have done as well as many other types
+of networks. Examples include modeling protein networks to predict disease and
+other ailments by observing the interactions between specific proteins.
 
 %In the case of Google Guava, the distribution has coefficient $\gamma\approx
 %2.7$, which suggests that it is within the realm of a scale-free network
