@@ -338,14 +338,10 @@ lines\footnote{Best practice dictates that all functions should be less than $10
 of code, so the number of functions is bounded above by an affine function of
 the number of lines of code} of code.
 \subsection*{Limitations}
-% TODO: someone do this part
+The main limitations of this method are the assumptions that need to be made in order for the results to be valid and the resulting analysis can only give an approximation. As opposed to other methods that can express runtime as a function relating input length to number of steps, this method with scale free networks can only give an approximation instead of a exact algorithm. In addition, the entire methodology is based on the assumption that the overall runtime is approximately monotone with respect to the complexity of the functions. Meaning, regardless of how complex each individual function is, each can be treated the same. However, this is normally not the case as there are many functions that are far more complex or simpler in a program, especially a program of such large proportions. In terms of runtime analysis, these are the primary limitations that are encountered.
 
 \section{Related Works}
-% TODO: someone do this part too
-
-
-
-
+There has been a lot of research done on different kinds of runtime analysis as well as scale free networks. Scale free networks have very unique characteristics that have applications in a huge variety of topics. It can be used to analyze static call graphs in programming but also many other types of networks. Examples include modeling protein networks to predict disease and other ailments by observing the interactions between specific proteins. 
 
 % (Lee) explain why scale-free networks are what's good - already did in section 2
 %  cite Guava and other projects we directly reference
