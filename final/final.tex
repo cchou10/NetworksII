@@ -39,6 +39,7 @@ growth of the max-degree node within the call-graph, which lets us approximate
  the running time of such systems with code size $n$ according
 to $O\left(\sqrt[\alpha]{n}\right)$ for $\alpha \approx 1.23$.}
     \end{abstract}
+    \vspace{-8pt}
     \hspace*{7,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
 engineering, static analysis, linear interpolation}
 
@@ -327,7 +328,7 @@ for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we 
 \section{Conclusion}
 By modeling the relationship of callee relationships within large Java projects, we were
 able to experimentally determine statistically significant evidence supporting
-the claim that the density of the random event $K = k$\footnote{the event that a randomly
+the claim that the density of the random event $[K = k]$\footnote{the event that a randomly
 chosen vertex has in-degree $k$} roughly follows a power law on the order of around
 $$p(k) = \frac{k^{-2.23}}{\zeta(2.23)}.$$ In addition, this scale-freeness property yields
 the additional relationship that $k_{max}$, the degree of the most called function, is on the order of
