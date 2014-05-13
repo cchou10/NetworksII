@@ -260,7 +260,8 @@ We implemented the analysis platform described in the previous two subsections o
 various software projects. We then plotted the sample degree distribution on a log-log 
 scaled plot and looked at the powerlaw interpolation described in section 3.2. 
 \begin{figure}
-\caption{Log-Log degree distribution for the MARS project.\label{fig:marsold}}
+\centering
+\caption{Log-Log degree distribution for the JUnit project.\label{fig:marsold}}
 \includegraphics[scale=0.45]{images/marsold}
 \end{figure}
 For every project we analyzed, we saw clear linear trends at the initial segment of the
@@ -276,9 +277,16 @@ event that a random vertex has in-degree of $k$. We know that
 $$P(K > k) = 1 - \sum_{i = 1}^k Ci^{-\gamma} = Ck^{1 - \gamma}$$
 however, the cumulative sum of the sample data is more stable because the low-frequency
 tail will contribute negligibly to the cumulative sum if there are a lot of data already.
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.45]{images/guava}
+\caption{Regression after fixing the fat-tail.\label{fig:guava}}
+\end{figure}
 Therefore, we found that if we compute the sample cumulative instead and get its 
-linear regression, we essentially remove all of the noise! This is computed by the
- \g{cumulativeDistribution} subroutine within the code in the appendix.
+linear regression, we essentially remove all of the noise as can be see in figure 
+\ref{fig:guava}. 
+This is computed by the \g{cumulativeDistribution} subroutine within the code in 
+the appendix.
 
 % TODO(Lee) explain why scale-free networks are what's good - already did in section 2
 % TODO cite Guava and other projects we directly reference
