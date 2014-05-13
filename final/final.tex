@@ -196,7 +196,7 @@ degree $d$ within $G_P$.
 \subsection{Assessing Goodness of Fit and Linear Interpolation}
 
 We analyzed the source code of seven large open source Java projects, including
-Google Guava and ANTLR, and found that the degree distribution in each follows
+Google Guava \cite{Guava} and ANTLR \cite{ANTLR}, and found that the degree distribution in each follows
 a power law based on their \g{loglog} plots. Recall that if a distribution has
 density $p(k)\sim Ck^{-\gamma}$, then $\log(p(k))=\log(C)-\gamma\log(k)$, so
 its distribution should look roughly linear.
@@ -302,18 +302,17 @@ the appendix.
 As we can see in figure \ref{fig:guava} and \ref{fig:deg}, the degree distributions of
 all of the call-graphs we analyzed roughly follow power laws. In fact, we have a sample of
 $\gamma$ of
-% TODO Cite these projects
 \begin{table}[H]
 \centering
 \begin{tabular}{|c|c|} \hline
 Project & $\gamma$ \\ \hline
-ANTLR & 2.1441 \\
-Guava & 2.3121 \\
-JUNIT & 2.1025 \\
-Logisim & 2.3231 \\
-MARS & 2.2806 \\
-Webmagic & 2.2382 \\
-Xstream & 2.2592 \\ \hline
+ANTLR \cite{ANTLR} & 2.1441 \\
+Guava \cite{Guava} & 2.3121 \\
+JUNIT \cite{JUnit} & 2.1025 \\
+Logisim \cite{Logisim} & 2.3231 \\
+MARS \cite{MARS} & 2.2806 \\
+Webmagic \cite{WebMagic} & 2.2382 \\
+Xstream \cite{Xstream} & 2.2592 \\ \hline
 \end{tabular}
 \end{table}
 \noindent which seems to be tightly packed around $2.2$. In fact, the sample mean is
@@ -325,7 +324,7 @@ for all software projects is in the range $[2.159581, 2.314648]$. Therefore, we 
  statistically significant evidence to believe that on average
  $p(k) = O(k^{\bar \gamma})$ for some $\bar \gamma \in [2.159581, 2.314648]$.
 \section{Conclusion}
-By modeling the relationship of callee relationships within large java projects, we were
+By modeling the relationship of callee relationships within large Java projects, we were
 able to experimentally determine statistically significant evidence supporting
 the claim that the density of the random event $K = k$\footnote{the event that a randomly
 chosen vertex has in-degree $k$} roughly follows a power law on the order of around
