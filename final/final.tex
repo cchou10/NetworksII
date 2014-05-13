@@ -17,10 +17,10 @@
 
 \begin{document}
 \begin{singlespace}
-
-\maketitle
-
-\begin{abstract}
+\twocolumn[
+  \begin{@twocolumnfalse}
+    \maketitle
+    \begin{abstract}
 {We explore a novel approximate measure in the efficiency of large-scale
 software engineering projects. Many software systems are so large and complex
 that it is impossible to reason about their runtime properties using
@@ -33,13 +33,16 @@ calls.}
 behave like scale-free networks, we gain an asymptotic characterization of the
 growth of the max-degree node within the call-graph, which lets us approximate
  the running time of such systems with code size $n$ according
-to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.25$.}
+to $O\left(\sqrt[\alpha]{n}\right)$ for some $\alpha \approx 1.27$.}
 % TODO(Favian): Add specific information about experimental results.
-\end{abstract}
-
-\hspace*{3,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
+    \end{abstract}
+    \hspace*{7,6mm}\textit{Keywords:} {\sf \small scale-free networks, software
 engineering, static analysis, linear interpolation}
+
 \vspace{10pt}
+  \end{@twocolumnfalse}
+]
+
 
 \section{Introduction}
 
@@ -73,7 +76,7 @@ the expected \emph{most} number of calls that any function within the software
 will receive.
 
 While this expected maximum number of called function is somewhat difficult/tedious
-to compute (especially for large projects), we found that it is possible to accurately
+to compute, we found that it is possible to accurately
 estimate this statistic using only the number of functions alone. We introduce a 
 network modeling the caller-callee interaction between various subroutines known
 as a call-graph and posit that all such graph structures exhibit powerlaw degree 
@@ -112,9 +115,10 @@ there exists a preferential attachment to certain functions over others.
 Consequently, we believe that $G_P$ will be scale-free in the sense that
 the in-degree distribution of the nodes of $G_P$ forms a power law
 distribution \cite{DUR}:
+
 \begin{itemize}
 \item suppose $p(k)$ is the probability of randomly encountering a vertex in $G_P$
-with indegree $k$; then $p(k)\sim Ck^{-\gamma}$ and
+with indegree $k$, then $p(k)\sim Ck^{-\gamma}$ and
 \item furthermore, $2\leq\gamma\leq 3$.
 \end{itemize}
 
@@ -233,13 +237,54 @@ Thus we get a power law coefficient
 \gamma=\frac{\left(\sum\bar{k}\right)\left(\sum \bar{y}\right)
 -n\bar{k}^T\bar{y}}{n\bar{k}^T\bar{k}-\left(\sum \bar{k}\right)^2},
 \end{equation}
-which is easily computable.
+which is easily computable by algorithm 2.
+\begin{algorithm}
+\caption{Powerlaw Fitting}
+\begin{algorithmic}
+\Function{PowerInterpolate}{$k, y$}
+\State $n \gets \g{len}(k)$
+\State $\bar k, \bar y \gets \log(k), \log(y)$
+\State $s_k, s_y \gets \g{sum}(\bar k), \g{sum}(\bar y)$
+\State $k_k, k_y \gets \g{dot}(\bar k, \bar k), \g{dot}(\bar k, \bar y)$
+\State \Return $\frac{s_k \times s_y - n \times k_y}{n \times k_k - s_k^2}$
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+More concretely, we implemented this within our static analysis as the function 
+\g{coefs} in the appendix which takes in a mapping $\g{dist}$ where 
+$y = \g{dist}(k)$ gives the 
+number of vertices that have $k$ as their in-degree.
 
-% TODO(Lee) explain why scale-free networks are what's good
+\subsection{Analysis}
+We implemented the analysis platform described in the previous two subsections on
+various software projects. We then plotted the sample degree distribution on a log-log 
+scaled plot and looked at the powerlaw interpolation described in section 3.2. 
+\begin{figure}
+\caption{Log-Log degree distribution for the MARS project.\label{fig:marsold}}
+\includegraphics[scale=0.45]{images/marsold}
+\end{figure}
+For every project we analyzed, we saw clear linear trends at the initial segment of the
+data, which is highly suggestive of the powerlaw nature of the degree distribution. 
+Unfortunately, since the in-degree cannot be fractional, we begin seeing the tail 
+of this distribution getting flattened out to $y = 1$, which ends up heavily skewing 
+the exponent $\gamma$, as can be seen in figure \ref{fig:marsold}.
+
+This ``skewing'' of the linear regression can be corrected by instead looking at the
+cumulative density of the data \cite{CLASS}. Consider the probability density function
+$p(k) = C k^{-\gamma}$ and let the random variable $K$ be such that $K = k$ is the
+event that a random vertex has in-degree of $k$. We know that 
+$$P(K > k) = 1 - \sum_{i = 1}^k Ci^{-\gamma} = Ck^{1 - \gamma}$$
+however, the cumulative sum of the sample data is more stable because the low-frequency
+tail will contribute negligibly to the cumulative sum if there are a lot of data already.
+Therefore, we found that if we compute the sample cumulative instead and get its 
+linear regression, we essentially remove all of the noise! This is computed by the
+ \g{cumulativeDistribution} subroutine within the code in the appendix.
+
+% TODO(Lee) explain why scale-free networks are what's good - already did in section 2
 % TODO cite Guava and other projects we directly reference
-In the case of Google Guava, the distribution has coefficient $\gamma\approx
-2.7$, which suggests that it is within the realm of a scale-free network
-\cite{CLASS}.
+%In the case of Google Guava, the distribution has coefficient $\gamma\approx
+%2.7$, which suggests that it is within the realm of a scale-free network
+%\cite{CLASS}.
 
 % TODO(Lee) talk about fat tails and cdfs
 
